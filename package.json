@@ -1,0 +1,19 @@
+{
+  "name": "extensao-3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm:start --prefix backend\" \"npm:start --prefix frontend\"",
+    "start": "npm run dev",
+    "start:frontend": "npm start --prefix frontend",
+    "start:backend": "npm run start:dev --prefix backend"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
