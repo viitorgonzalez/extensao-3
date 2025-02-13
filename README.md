@@ -1,6 +1,6 @@
 # Extensão 3
 
-Este é um projeto full-stack composto por um frontend e um backend, utilizando o NestJS no backend e o framework de sua escolha no frontend.
+Este é um projeto full-stack composto por um frontend e um backend, utilizando o NestJS no backend e o framework ReactJS no frontend.
 
 ## Estrutura do Projeto
 
@@ -9,8 +9,32 @@ Este é um projeto full-stack composto por um frontend e um backend, utilizando 
 
 ## Pré-requisitos
 
-Certifique-se de que você tenha o Node.js instalado em sua máquina. Você pode verificar se o Node.js está instalado rodando o comando:
+- NodeJs
 
+### Verificando a versão do Node.js e npm
+
+Para verificar a instalação ou a versão do Node.js instalada em sua máquina, execute o seguinte comando:
+
+~~~bash
+node -v
+~~~
+
+Para verificar a instalação ou a versão do npm, execute o seguinte comando:
+
+~~~bash
+npm -v
+~~~
+
+### Node versão utilizada:
+- v22.14.0
+
+### Npm versão utilizada:
+- 11.1.0
+
+Se você não tiver essas versões, pode baixar o Node.js no site oficial, que inclui o npm:
+
+- [Node.js v22.14.0](https://nodejs.org/download/release/v22.14.0/)
+- O npm será instalado automaticamente junto com o Node.js.
 
 ## Instale as dependências:
 ### Na raiz do projeto:
