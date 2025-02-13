@@ -31,9 +31,9 @@ npm -v
 ### Npm versão utilizada:
 - 11.1.0
 
-Se você não tiver essas versões, pode baixar o Node.js no site oficial, que inclui o npm:
+Se você não tiver essas versões, pode baixar o Node.js LTS no site oficial, que inclui o npm:
 
-- [Node.js v22.14.0](https://nodejs.org/download/release/v22.14.0/)
+- [NodeJs](https://nodejs.org/pt)
 - O npm será instalado automaticamente junto com o Node.js.
 
 ## Instale as dependências:
