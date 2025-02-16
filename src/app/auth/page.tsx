@@ -22,8 +22,8 @@ export default function Home() {
             const { data: dataUser, error } = await supabase
                 .auth
                 .signInWithPassword({
-                    email: 'pimenta@gmail.com',
-                    password: 'pimenta'
+                    email: data.email,
+                    password: data.password
                 })
 
             if (dataUser) {
