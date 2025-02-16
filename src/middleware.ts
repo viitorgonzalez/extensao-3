@@ -4,19 +4,25 @@ import { NextRequest, NextResponse } from "next/server";
 export async function middleware(req: NextRequest) {
     const res = NextResponse.next()
 
-    const supabase = createMiddlewareClient({ req, res })    
+    const supabase = createMiddlewareClient({ req, res })
 
     const {
         data: {
             session
         }
-      } = await supabase.auth.getSession()
+    } = await supabase.auth.getSession()
 
-      if(!session) {
-        return NextResponse.rewrite(new URL('/auth', req.url))
-      } 
+    if (!session) {
+        if (req.nextUrl.pathname !== '/auth') {
+            return NextResponse.redirect(new URL('/auth', req.url)); 
+        }
+    }
 
-      return res
+    if (session && req.nextUrl.pathname === '/auth') {
+        return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
+
+    return res
 }
 
 // ignore roots with "api, _next/static, _next/image or favicon.ico"
