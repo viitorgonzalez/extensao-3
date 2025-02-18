@@ -1,10 +1,12 @@
 'use client'
 
 import React, { useState } from "react"
+import { setProperty } from "../../supabase/queries/setProperty"
 
 export default function Dashboard() {
     const [isFormOpen, setIsFormOpen] = useState(false)
     const [selectedZone, setSelectedZone] = useState("centro")
+    const [selectedCategory, setSelectedCategory] = useState(1)
     const [colorsGraphic, setColorsGraphic] = useState({
         green: true,
         yellow: true,
@@ -16,6 +18,9 @@ export default function Dashboard() {
         yellow: true,
         red: true
     })
+
+    const [statusMessage, setStatusMessage] = useState('')
+    const [statusMessageStyle, setStatusMessageStyle] = useState('')
 
     const toggleForm = () => {
         setIsFormOpen(!isFormOpen)
@@ -32,11 +37,56 @@ export default function Dashboard() {
         }))
     }
 
+    const handleCategorySelect = (category) => {
+        setSelectedCategory(category)
+    }
+
     const handleColorToggleList = (color) => {
         setColorsList(prev => ({
             ...prev,
             [color]: !prev[color]
         }))
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const category = selectedCategory
+
+        const data = {
+            street: e.target[0].value,
+            number: e.target[1].value,
+            neighborhood: e.target[2].value,
+            zone: e.target[3].value,
+            category: category,
+        }
+
+        if(!data.street || !data.number || !data.neighborhood || !data.zone || !data.category) {
+            setStatusMessage('Todos os campos são obrigatórios');
+            setStatusMessageStyle('text-red-500');
+            return;
+        }
+
+        const property = {
+            address: {
+                street: data.street,
+                number: data.number,
+                neighborhood: data.neighborhood
+            },
+            zone: data.zone,
+            category: data.category
+        }
+
+        const result = await setProperty(property);
+
+        if (result) {
+            setStatusMessage('Cadastro concluído com sucesso!')
+            setStatusMessageStyle('text-green-500')
+            e.target.reset();  
+        } else {
+            setStatusMessage('Erro ao cadastrar a propriedade')
+            setStatusMessageStyle('text-red-500')
+        }
     }
 
     return (
@@ -82,7 +132,7 @@ export default function Dashboard() {
 
                     {/* Gráficos */}
                     <div className="flex items-center justify-center w-full h-full">
-                        {/* Aqui ficará a lógica dos gráficos que você implementará depois */}
+                        {/* Aqui ficará a lógica dos gráficos */}
                         Gráficos
                     </div>
                 </div>
@@ -102,10 +152,38 @@ export default function Dashboard() {
                                 >
                                     X
                                 </button>
-                                <h3 className="text-xl font-bold mb-4">Formulário de Cadastro</h3>
-                                <form>
-                                    <input type="text" placeholder="Nome do Imóvel" className="mb-4 p-2 border rounded w-full" />
-                                    <input type="text" placeholder="Endereço" className="mb-4 p-2 border rounded w-full" />
+                                <h3 className="text-black text-xl font-bold mb-4">Formulário de Cadastro</h3>
+                                
+                                {/* Mensagem de status */}
+                                {statusMessage && (
+                                    <div className={`mb-4 ${statusMessageStyle}`}>
+                                        {statusMessage}
+                                    </div>
+                                )}
+
+                                <form onSubmit={handleSubmit}>
+                                    <input type="text" placeholder="Rua" className="mb-4 p-2 border rounded w-full text-black" />
+                                    <input type="text" placeholder="Número" className="mb-4 p-2 border rounded w-full text-black" />
+                                    <input type="text" placeholder="Bairro" className="mb-4 p-2 border rounded w-full text-black" />
+                                    <input type="text" placeholder="Zona" className="mb-4 p-2 border rounded w-full text-black" />
+                                    <div className="flex gap-2 p-4">
+                                        <h3 className="text-black">Categoria:</h3>
+                                        <div
+                                            onClick={() => handleCategorySelect(1)}
+                                            className={`w-6 h-6 rounded-full bg-green-500 cursor-pointer 
+                                            ${selectedCategory === 1 ? 'ring-2 ring-black brightness-90' : ''}`}
+                                        />
+                                        <div
+                                            onClick={() => handleCategorySelect(2)}
+                                            className={`w-6 h-6 rounded-full bg-yellow-500 cursor-pointer 
+                                            ${selectedCategory === 2 ? 'ring-2 ring-black brightness-90' : ''}`}
+                                        />
+                                        <div
+                                            onClick={() => handleCategorySelect(3)}
+                                            className={`w-6 h-6 rounded-full bg-red-500 cursor-pointer 
+                                            ${selectedCategory === 3 ? 'ring-2 ring-black brightness-90' : ''}`}
+                                        />
+                                    </div>
                                     <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded-full">Cadastrar</button>
                                 </form>
                             </div>
@@ -121,7 +199,6 @@ export default function Dashboard() {
                             <option value="centro">Centro</option>
                             <option value="bairro1">Bairro 1</option>
                             <option value="bairro2">Bairro 2</option>
-                            {/* Adicione mais zonas conforme necessário */}
                         </select>
 
                         {/* Categoria */}
@@ -152,7 +229,7 @@ export default function Dashboard() {
                         <ul>
                             <li className={'bg-gray-800'}>endereço 0, 000, centro</li>
                             <li className={'bg-gray-600'}>endereço 1, 111, Bairro 1</li>
-                            <li className={'bg-gray-800'}>endereço 22, 222, Bairro 2</li>
+                            <li className={'bg-gray-800'}>endereço 2, 222, Bairro 2</li>
                         </ul>
                     </div>
                 </div>
