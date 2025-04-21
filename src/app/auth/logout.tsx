@@ -3,7 +3,7 @@ import { supabase } from "../../supabase/config"
 
 export const logout = async () => {
   try {
-    const { error } = await supabase.auth.signOut({ scope: 'local' })
+    const { error } = await supabase.auth.signOut()
     if (error) {
       console.error('Erro ao sair:', error)
     }

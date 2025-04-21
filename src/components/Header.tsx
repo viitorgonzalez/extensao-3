@@ -7,8 +7,13 @@ const Header = () => {
   const router = useRouter()
 
   const handleLogout = async () => {
-    await logout() // faz o signOut no supabase
-    router.push('/login') // redireciona no client
+    try {
+      await logout()
+      router.push('/login')
+    } catch (error) {
+      console.error('Falha no logout:', error)
+      // Pode mostrar uma mensagem para o usuário se quiser
+    }
   }
 
   return (
