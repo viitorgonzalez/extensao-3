@@ -9,21 +9,27 @@ import Header from "../../components/Header";
 
 export default function Dashboard() {
     return (
-        <div className="p-4 flex flex-col justify-between bg-[#E0FFFF] h-screen overflow-auto">
+        <div className="p-4 flex flex-col justify-between bg-white h-screen overflow-auto">
             <Header />
-            
-            <div className="flex justify-center h-full items-center">
-                <div className="bg-white rounded-2xl p-6 shadow-lg w-full max-w-6xl flex flex-col gap-4">
-                    <div className="flex justify-center gap-4">
-                        <PropertyForm />
-                        <PropertyList />
-                    </div>
 
+            <div className="bg-[#FAF0E6] rounded-2xl p-6 shadow-lg w-full grid grid-cols-2 gap-4 mx-auto">
+                {/* Coluna da esquerda (50%) */}
+                <div className="h-full">
                     <GraphicSection />
                 </div>
+
+                {/* Coluna da direita com 2 seções */}
+                <div className="h-full grid grid-rows-2 gap-4">
+                    <div className="bg-white rounded-xl p-4 shadow h-full overflow-auto">
+                        <PropertyList />
+                    </div>
+                    <div className="bg-white rounded-xl p-4 shadow h-full overflow-auto">
+                        <PropertyForm />
+                    </div>
+                </div>
             </div>
-            
-            <div className="p-4 mt-[10%] flex justify-center items-center">
+
+            <div className="p-4 mt-[2%] flex justify-center items-center">
                 <Footer />
             </div>
         </div>

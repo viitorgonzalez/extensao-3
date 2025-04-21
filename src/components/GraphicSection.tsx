@@ -75,7 +75,7 @@ const GraphicSection = () => {
                     ]
 
                     return (
-                        <div key={zone} className="bg-white rounded-lg shadow p-2">
+                        <div key={zone} className="bg-[#FFFAFA] rounded-lg shadow p-2">
                             <h2 className="text-md font-semibold mb-2 text-black text-center">
                                 Zona {zone}
                             </h2>

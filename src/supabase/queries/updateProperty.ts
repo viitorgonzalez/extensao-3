@@ -5,18 +5,16 @@ export const updateProperty = async (property: Property) => {
     const { data, error } = await supabase
         .from('properties')
         .update({
-            street: property.address?.street,
-            number: property.address?.number,
-            neighborhood: property.address?.neighborhood,
+            address: property.address,
             zone: property.zone,
             category: property.category,
         })
-        .eq('id', property.id); // Faz o update da propriedade com o id específico
+        .eq('id', property.id);
 
     if (error) {
         console.error(error);
         return null;
     }
 
-    return data;
+    return {success: true, data};
 };

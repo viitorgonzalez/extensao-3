@@ -3,17 +3,17 @@
 import React, { useState } from "react";
 import { getPropertiesList } from "../supabase/queries/getPropertiesList";
 import { deleteProperty } from "../supabase/queries/deleteProperty";
-// import { updateProperty } from "../supabase/queries/updateProperty";
-
+import { updateProperty } from "../supabase/queries/updateProperty";
+import { Property } from "../supabase/models/Property";
+import EditPropertyCard from "./EditPropertyCard";
 
 const PropertyList = () => {
     const [statusMessage, setStatusMessage] = useState('');
     const [statusMessageStyle, setStatusMessageStyle] = useState('');
     const [selectedCategoryList, setSelectedCategoryList] = useState<number>(1);
-    const [isListOpen, setIsListOpen] = useState(false);
     const [filteredProperties, setFilteredProperties] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-
+    const [propertyToEdit, setPropertyToEdit] = useState<Property | null>(null);
 
     // Estados para os campos de filtro
     const [street, setStreet] = useState("");
@@ -23,14 +23,8 @@ const PropertyList = () => {
 
     const zoneList = ["Todas", "Zona 01", "Zona 02", "Zona 03", "Zona 04", "Zona 05", "Zona 06", "Zona 07", "Zona 08", "Zona 09"];
 
-    const toggleList = () => {
-        setIsListOpen(!isListOpen);
-    };
-
-    const closeList = () => {
-        setIsListOpen(false);
+    const handleCloseResults = () => {
         setFilteredProperties([]);
-        setStatusMessage('');
     };
 
     const handleCategorySelectList = (category: number) => {
@@ -105,152 +99,149 @@ const PropertyList = () => {
         }
     };
 
-    // const handleUpdate = async (property: Property) => {
-    //     try {
-    //         setIsLoading(true);
+    const handleUpdate = async (property: Property) => {
+        try {
+            setIsLoading(true);
 
+            const result = await updateProperty(property);
 
-    //         // implementar update
-    //         // const result = await updateProperty(property);
+            if (result.success) {
+                console.log("Editado!");
+            }
 
-            
-    //     } catch (error) {
-    //         console.error("Erro ao editar card: ", error)
-    //     } finally {
+        } catch (error) {
+            console.error("Erro ao editar card: ", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-    //     }
-    // }
-    
     return (
-        <div>
-            {/* Botão para abrir o formulário de filtro */}
-            {!isListOpen && (
-                <button onClick={toggleList} className="bg-blue-500 text-white py-2 px-6 rounded-full mt-4">
-                    Filtrar Propriedades
-                </button>
+        <div className="p-6">
+            {propertyToEdit && (
+                <EditPropertyCard
+                    property={propertyToEdit}
+                    onClose={() => setPropertyToEdit(null)}
+                    onSave={handleUpdate}
+                />
             )}
 
-            {/* Formulário de filtro quando isListOpen for true */}
-            {isListOpen && (
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <input
+                    type="text"
+                    placeholder="Rua"
+                    className="p-2 border rounded w-full text-black"
+                    value={street}
+                    onChange={(e) => setStreet(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder="Número"
+                    className="p-2 border rounded w-full text-black"
+                    value={number}
+                    onChange={(e) => setNumber(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder="Bairro"
+                    className="p-2 border rounded w-full text-black"
+                    value={neighborhood}
+                    onChange={(e) => setNeighborhood(e.target.value)}
+                />
+                <select
+                    value={selectedZone}
+                    onChange={(e) => setSelectedZone(e.target.value)}
+                    className="p-2 border rounded w-full text-black"
+                >
+                    {zoneList.map((zone, index) => (
+                        <option key={index} value={zone}>{zone}</option>
+                    ))}
+                </select>
+
+                <div className="flex gap-2 p-4">
+                    <h3 className="text-black">Categoria:</h3>
+                    <div
+                        onClick={() => handleCategorySelectList(1)}
+                        className={`w-6 h-6 rounded-full bg-green-500 cursor-pointer ${selectedCategoryList === 1 ? 'ring-2 ring-black brightness-90' : ''}`}
+                        title="Categoria 1"
+                    />
+                    <div
+                        onClick={() => handleCategorySelectList(2)}
+                        className={`w-6 h-6 rounded-full bg-yellow-500 cursor-pointer ${selectedCategoryList === 2 ? 'ring-2 ring-black brightness-90' : ''}`}
+                        title="Categoria 2"
+                    />
+                    <div
+                        onClick={() => handleCategorySelectList(3)}
+                        className={`w-6 h-6 rounded-full bg-red-500 cursor-pointer ${selectedCategoryList === 3 ? 'ring-2 ring-black brightness-90' : ''}`}
+                        title="Categoria 3"
+                    />
+                </div>
+
+                <button
+                    type="submit"
+                    className="bg-[#59A5CE] text-white p-2 rounded-full"
+                    disabled={isLoading}
+                >
+                    {isLoading ? 'Buscando...' : 'Filtrar'}
+                </button>
+            </form>
+
+            {statusMessage && (
+                <div className={`mb-4 ${statusMessageStyle}`}>
+                    {statusMessage}
+                </div>
+            )}
+
+            {/* Exibição dos resultados */}
+            {filteredProperties.length > 0 && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
-                    <div className="bg-white p-10 rounded-lg w-[80%] max-w-4xl shadow-xl relative">
-                        <button onClick={closeList} className="absolute top-4 right-4 text-gray-600 hover:text-gray-900">X</button>
-                        <h3 className="text-black text-xl font-bold mb-4">Filtrar Propriedades</h3>
-                        {statusMessage && (
-                            <div className={`mb-4 ${statusMessageStyle}`}>
-                                {statusMessage}
-                            </div>
-                        )}
-                        <form onSubmit={handleSubmit}>
-                            <input
-                                type="text"
-                                placeholder="Rua"
-                                className="mb-4 p-2 border rounded w-full text-black"
-                                value={street}
-                                onChange={(e) => setStreet(e.target.value)}
-                            />
-                            <input
-                                type="text"
-                                placeholder="Número"
-                                className="mb-4 p-2 border rounded w-full text-black"
-                                value={number}
-                                onChange={(e) => setNumber(e.target.value)}
-                            />
-                            <input
-                                type="text"
-                                placeholder="Bairro"
-                                className="mb-4 p-2 border rounded w-full text-black"
-                                value={neighborhood}
-                                onChange={(e) => setNeighborhood(e.target.value)}
-                            />
+                    <div className="bg-blue-600 p-8 rounded-lg relative">
+                        <button
+                            onClick={handleCloseResults}  // Fecha os resultados
+                            className="absolute top-0 right-2 text-white font-bold text-xl">x</button>
+                        <ul className="space-y-4">
+                            <h4 className="font-bold mb-2 text-black">Resultados:</h4>
+                            {filteredProperties.map((property, index) => (
+                                <li
+                                    key={index}
+                                    className={`p-4 rounded-lg shadow-sm border transition duration-200 flex justify-between items-center ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}`}
+                                >
+                                    <div className="flex flex-col justify-between items-start w-[50%]">
+                                        <p className="text-black">
+                                            <strong className="font-semibold">Endereço:</strong> {property.address?.street}, {property.address?.number}
+                                        </p>
+                                        <p className="text-black">
+                                            <strong className="font-semibold">Bairro:</strong> {property.address?.neighborhood}
+                                        </p>
+                                        <p className="text-black">
+                                            <strong className="font-semibold">Zona:</strong> {property.zone}
+                                        </p>
+                                        <div className="text-black">
+                                            <strong className="font-semibold">Categoria: </strong>
+                                            <div
+                                                className={`w-4 h-4 rounded-full inline-block align-middle ${property.category === 1
+                                                    ? 'bg-green-500'
+                                                    : property.category === 2
+                                                        ? 'bg-yellow-500'
+                                                        : 'bg-red-500'
+                                                    }`}
+                                            />
+                                        </div>
+                                    </div>
 
-                            {/* Campo Zona como select */}
-                            <select
-                                value={selectedZone}
-                                onChange={(e) => setSelectedZone(e.target.value)}
-                                className="mb-4 p-2 border rounded w-full text-black"
-                            >
-                                {zoneList.map((zone, index) => (
-                                    <option key={index} value={zone}>{zone}</option>
-                                ))}
-                            </select>
-
-                            <div className="flex gap-2 p-4">
-                                <h3 className="text-black">Categoria:</h3>
-                                <div
-                                    onClick={() => handleCategorySelectList(1)}
-                                    className={`w-6 h-6 rounded-full bg-green-500 cursor-pointer ${selectedCategoryList === 1 ? 'ring-2 ring-black brightness-90' : ''}`}
-                                    title="Categoria 1"
-                                />
-                                <div
-                                    onClick={() => handleCategorySelectList(2)}
-                                    className={`w-6 h-6 rounded-full bg-yellow-500 cursor-pointer ${selectedCategoryList === 2 ? 'ring-2 ring-black brightness-90' : ''}`}
-                                    title="Categoria 2"
-                                />
-                                <div
-                                    onClick={() => handleCategorySelectList(3)}
-                                    className={`w-6 h-6 rounded-full bg-red-500 cursor-pointer ${selectedCategoryList === 3 ? 'ring-2 ring-black brightness-90' : ''}`}
-                                    title="Categoria 3"
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="bg-blue-500 text-white p-2 rounded-full"
-                                disabled={isLoading}
-                            >
-                                {isLoading ? 'Buscando...' : 'Filtrar'}
-                            </button>
-                        </form>
-
-                        {/* Exibição dos resultados */}
-                        {filteredProperties.length > 0 && (
-                            <div className="mt-8 max-h-60 overflow-y-auto">
-                                <h4 className="font-bold mb-2 text-black">Resultados:</h4>
-                                <ul className="space-y-4">
-                                    {filteredProperties.map((property, index) => (
-                                        <li
-                                            key={index}
-                                            className={`p-4 rounded-lg shadow-sm border transition duration-200 flex justify-between items-center ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'
-                                                }`}
-                                        >
-                                            <div className="flex flex-col justify-between items-start w-[50%]">
-                                                <p className="text-black">
-                                                    <strong className="font-semibold">Endereço:</strong> {property.address?.street}, {property.address?.number}
-                                                </p>
-                                                <p className="text-black">
-                                                    <strong className="font-semibold">Bairro:</strong> {property.address?.neighborhood}
-                                                </p>
-                                                <p className="text-black">
-                                                    <strong className="font-semibold">Zona:</strong> {property.zone}
-                                                </p>
-                                                <div className="text-black">
-                                                    <strong className="font-semibold">Categoria: </strong>
-                                                    <div
-                                                        className={`w-4 h-4 rounded-full inline-block align-middle ${property.category === 1
-                                                            ? 'bg-green-500'
-                                                            : property.category === 2
-                                                                ? 'bg-yellow-500'
-                                                                : 'bg-red-500'
-                                                            }`}
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="flex gap-2 items-end">
-                                                {/* <button onClick={() => handleUpdate(property)} className="text-sm text-blue-600 hover:underline">
-                                                    Editar
-                                                </button> */}
-                                                <button
-                                                    onClick={() => handleDelete(property.id)}
-                                                    className="text-sm text-red-600 hover:underline">
-                                                    Deletar
-                                                </button>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
+                                    <div className="flex gap-2 items-end">
+                                        <button onClick={() => setPropertyToEdit(property)} className="text-sm text-blue-600 hover:underline">
+                                            Editar
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(property.id)}
+                                            className="text-sm text-red-600 hover:underline">
+                                            Deletar
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
             )}
