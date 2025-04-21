@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
@@ -67,7 +66,6 @@ export default function Home() {
                     >
                         Entrar
                     </button>
-                    {/* Passando a função de autenticação como prop */}
                 </div>
             </div>
         </div>
