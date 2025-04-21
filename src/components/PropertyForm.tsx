@@ -12,7 +12,7 @@ const PropertyForm = () => {
 
     const zoneList = ["Zona 01", "Zona 02", "Zona 03", "Zona 04", "Zona 05", "Zona 06", "Zona 07", "Zona 08", "Zona 09"]
 
-    const [selectedZone, setSelectedZone] = useState("");
+    const [selectedZone, setSelectedZone] = useState("Zona 01");
 
 
     const toggleForm = () => {
