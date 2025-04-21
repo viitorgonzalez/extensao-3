@@ -23,4 +23,3 @@ export const logout = async () => {
   //   console.error('Erro ao sair:', error)
   //   throw error
   // }
-}
