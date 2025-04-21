@@ -6,7 +6,8 @@ import { logout } from '../app/auth/logout'
 const Header = () => {
   const router = useRouter()
 
-  const handleLogout = async () => {
+  const handleLogout = async (e) => {
+    e.preventDefault()
     await logout() // faz o signOut no supabase
     router.push('/login') // redireciona no client
   }

@@ -26,7 +26,8 @@ export default function Home() {
         }))
     }
 
-    const handleLogin = async () => {
+    const handleLogin = async (e) => {
+        e.preventDefault()
         try {
             await auth({ email: data.email, password: data.password })
             router.push("/dashboard")
