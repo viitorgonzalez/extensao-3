@@ -1,15 +1,15 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { logout } from '../app/auth/logout'
+import { useNavigate } from 'react-router-dom'
 
 const Header = () => {
-  const router = useRouter()
+  const navigate = useNavigate()
 
   const handleLogout = async (e) => {
     e.preventDefault()
     await logout() // faz o signOut no supabase
-    router.push('/login') // redireciona no client
+    navigate('/login') // redireciona no client
   }
 
   return (
