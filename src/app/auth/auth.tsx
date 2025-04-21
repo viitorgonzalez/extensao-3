@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation"
-import { supabase } from "../../supabase/config"  // Certifique-se de importar corretamente o supabase
+import { supabase } from "../../supabase/config";
 
 interface AuthProps {
     email: string;
@@ -8,6 +8,10 @@ interface AuthProps {
 
 export default function Auth({ email, password }: AuthProps) {
     const router = useRouter()
+
+    if (!email || !password) {
+        return
+    }
 
     const auth = async () => {
         try {
