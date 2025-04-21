@@ -3,8 +3,8 @@
 'use client'
 
 import React, { useState } from "react"
-import { supabase } from "../../supabase/config"
 import { useRouter } from "next/navigation"
+import Auth from "../auth/auth"  // Importando o componente de autenticação
 
 export default function Home() {
     const [data, setData] = useState<{
@@ -14,25 +14,6 @@ export default function Home() {
         email: '',
         password: ''
     })
-
-    const router = useRouter()
-
-    const auth = async () => {
-        try {
-            const { data: dataUser, error } = await supabase
-                .auth
-                .signInWithPassword({
-                    email: data.email,
-                    password: data.password
-                })
-
-            if (dataUser) {
-                router.push('/dashboard')
-            }
-        } catch (error) {
-            console.error(error) 
-        }
-    }
 
     const handleChange = (e: any) => {
         const { name, value } = e.target
@@ -67,12 +48,8 @@ export default function Home() {
                     />
                 </div>
                 <div>
-                    <button 
-                        onClick={auth} 
-                        className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
-                    >
-                        Entrar
-                    </button>
+                    {/* Passando a função de autenticação como prop */}
+                    <Auth email={data.email} password={data.password} />
                 </div>
             </div>
         </div>

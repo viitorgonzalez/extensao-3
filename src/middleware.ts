@@ -13,12 +13,12 @@ export async function middleware(req: NextRequest) {
     } = await supabase.auth.getSession()
 
     if (!session) {
-        if (req.nextUrl.pathname !== '/auth') {
-            return NextResponse.redirect(new URL('/auth', req.url)); 
+        if (req.nextUrl.pathname !== '/login') {
+            return NextResponse.redirect(new URL('/login', req.url)); 
         }
     }
 
-    if (session && req.nextUrl.pathname === '/auth') {
+    if (session && req.nextUrl.pathname === '/login') {
         return NextResponse.redirect(new URL('/dashboard', req.url));
     }
 
