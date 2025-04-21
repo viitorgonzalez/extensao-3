@@ -18,8 +18,8 @@ export const logout = async () => {
     // if (error) {
     //   console.error('Erro ao sair:', error)
     //   throw error
-    }
-  // } catch (error) {
-  //   console.error('Erro ao sair:', error)
-  //   throw error
-  // }
+   } catch (error) {
+    console.error('Erro ao sair:', error)
+    throw error
+  }
+}
