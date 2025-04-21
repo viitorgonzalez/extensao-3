@@ -14,7 +14,7 @@ export const logout = async () => {
       console.log("Usuário não está logado", beforeError)
     }
 
-    await supabase.auth.signOut()
+    await supabase.auth.signOut({ scope: 'local' })
     redirect('/login')
     // Verifica novamente após logout
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
