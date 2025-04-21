@@ -6,11 +6,14 @@ const Header = () => {
   const router = useRouter()
 
   const handleLogout = async () => {
-    await fetch('/api/logout', {
-      method: 'POST',
-    })
-    router.push('/auth')
-  }
+    const response = await fetch('/api/logout', {
+        method: 'POST',
+    });
+    if (response.ok) {
+        router.push('/auth');
+    }
+};
+
 
   return (
     <div className="flex h-[10%] rounded-lg">
