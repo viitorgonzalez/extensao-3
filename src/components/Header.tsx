@@ -1,19 +1,23 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { supabase } from '../supabase/config'
 
 const Header = () => {
   const router = useRouter()
 
   const handleLogout = async () => {
-    const response = await fetch('/api/logout', {
-        method: 'POST',
-    });
-    if (response.ok) {
-        router.push('/auth');
-    }
-};
+    'use server'
+    try {
+      // Fazendo o logout
+      await supabase.auth.signOut()
 
+      // Redirecionando para a página de autenticação
+      router.push('/auth')
+    } catch (error) {
+      console.error("Erro ao fazer logout: ", error)
+    }
+  }
 
   return (
     <div className="flex h-[10%] rounded-lg">
