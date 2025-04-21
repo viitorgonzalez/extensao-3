@@ -24,13 +24,13 @@ export default function Auth({ email, password }: AuthProps) {
                 console.error('Erro de login: ', error)
             }
         } catch (error) {
-            console.error('Erro ao autenticar: ', error)
+            console.error('Erro ao autenticar: ', error) 
         }
     }
 
     return (
-        <button
-            onClick={auth}
+        <button 
+            onClick={auth} 
             className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
         >
             Entrar
