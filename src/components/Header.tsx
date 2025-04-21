@@ -1,15 +1,13 @@
 'use client'
 
 import { logout } from '../app/auth/logout'
-import { useNavigate } from 'react-router-dom'
 
 const Header = () => {
-  const navigate = useNavigate()
 
   const handleLogout = async (e) => {
     e.preventDefault()
     await logout() // faz o signOut no supabase
-    navigate('/login') // redireciona no client
+
   }
 
   return (

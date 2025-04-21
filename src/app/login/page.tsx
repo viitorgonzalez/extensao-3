@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import React, { useState } from "react"
 import { auth } from "../auth/auth"
-import { useNavigate } from "react-router-dom"
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
-    const navigate = useNavigate()
+    const router = useRouter()
 
     const [data, setData] = useState<{
         email: string,
@@ -15,10 +17,8 @@ export default function Home() {
         password: ''
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleChange = (e: any) => {
         const { name, value } = e.target
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setData((prev: any) => ({
             ...prev,
             [name]: value,
@@ -29,7 +29,6 @@ export default function Home() {
         e.preventDefault()
         try {
             await auth({ email: data.email, password: data.password })
-            navigate('/dashboard')
           } catch (error) {
             console.error('Erro ao entrar:', error)
           }
