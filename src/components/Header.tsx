@@ -12,7 +12,6 @@ const Header = () => {
       router.push('/login')
     } catch (error) {
       console.error('Falha no logout:', error)
-      // Pode mostrar uma mensagem para o usuário se quiser
     }
   }
 
