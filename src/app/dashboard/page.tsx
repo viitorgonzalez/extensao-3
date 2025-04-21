@@ -11,15 +11,20 @@ export default function Dashboard() {
     return (
         <div className="p-4 flex flex-col justify-between bg-[#E0FFFF] h-screen overflow-auto">
             <Header />
+            
             <div className="flex justify-center h-full items-center">
-            <GraphicSection />
+                <div className="bg-white rounded-2xl p-6 shadow-lg w-full max-w-6xl flex flex-col gap-4">
+                    <div className="flex justify-center gap-4">
+                        <PropertyForm />
+                        <PropertyList />
+                    </div>
+
+                    <GraphicSection />
+                </div>
             </div>
-            <div className="flex justify-center items-center gap-x-8">
-            <PropertyForm />
-            <PropertyList />
-            </div>
+            
             <div className="p-4 mt-[10%] flex justify-center items-center">
-            <Footer />
+                <Footer />
             </div>
         </div>
     );

@@ -75,8 +75,8 @@ const PropertyForm = () => {
 
             {/* Formulário quando isFormOpen for true */}
             {isFormOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-                    <div className="bg-white p-10 rounded-lg w-[80%] max-w-4xl shadow-xl relative">
+                <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
+                <div className="bg-white p-10 rounded-lg w-[80%] max-w-4xl shadow-xl relative">
                         <button onClick={closeForm} className="absolute top-4 right-4 text-gray-600 hover:text-gray-900">X</button>
                         <h3 className="text-black text-xl font-bold mb-4">Formulário de Cadastro</h3>
                         {statusMessage && (

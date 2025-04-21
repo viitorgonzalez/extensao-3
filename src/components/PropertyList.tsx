@@ -1,15 +1,19 @@
 'use client'
 
 import React, { useState } from "react";
-import { getPropertiesByZoneAndCategory } from "../supabase/queries/getPropertiesList";
+import { getPropertiesList } from "../supabase/queries/getPropertiesList";
+import { deleteProperty } from "../supabase/queries/deleteProperty";
+// import { updateProperty } from "../supabase/queries/updateProperty";
+
 
 const PropertyList = () => {
     const [statusMessage, setStatusMessage] = useState('');
     const [statusMessageStyle, setStatusMessageStyle] = useState('');
-    const [selectedCategoryList, setSelectedCategoryList] = useState<number | null>(null);
+    const [selectedCategoryList, setSelectedCategoryList] = useState<number>(1);
     const [isListOpen, setIsListOpen] = useState(false);
     const [filteredProperties, setFilteredProperties] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+
 
     // Estados para os campos de filtro
     const [street, setStreet] = useState("");
@@ -51,7 +55,7 @@ const PropertyList = () => {
             };
 
             // Buscar propriedades no Supabase
-            const properties = await getPropertiesByZoneAndCategory(filterParams);
+            const properties = await getPropertiesList(filterParams);
 
             // Filtro adicional local para campos de endereço
             const filtered = properties.filter(property => {
@@ -74,6 +78,49 @@ const PropertyList = () => {
         }
     };
 
+    const handleDelete = async (propertyId: number) => {
+        try {
+            setIsLoading(true);
+
+            // Chama a função deleteProperty
+            const result = await deleteProperty(propertyId);
+
+            if (result.success) {
+                // Atualiza o status da UI com a mensagem de sucesso
+                setStatusMessage(result.message);
+                setStatusMessageStyle('text-green-500');
+
+                // Atualiza a lista de propriedades removendo a propriedade deletada
+                setFilteredProperties(filteredProperties.filter(property => property.id !== propertyId));
+            } else {
+                setStatusMessage(result.message);
+                setStatusMessageStyle('text-red-500');
+            }
+        } catch (error) {
+            console.error('Erro inesperado ao deletar propriedade:', error);
+            setStatusMessage('Erro inesperado ao deletar propriedade');
+            setStatusMessageStyle('text-red-500');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // const handleUpdate = async (property: Property) => {
+    //     try {
+    //         setIsLoading(true);
+
+
+    //         // implementar update
+    //         // const result = await updateProperty(property);
+
+            
+    //     } catch (error) {
+    //         console.error("Erro ao editar card: ", error)
+    //     } finally {
+
+    //     }
+    // }
+    
     return (
         <div>
             {/* Botão para abrir o formulário de filtro */}
@@ -85,7 +132,7 @@ const PropertyList = () => {
 
             {/* Formulário de filtro quando isListOpen for true */}
             {isListOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
+                <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
                     <div className="bg-white p-10 rounded-lg w-[80%] max-w-4xl shadow-xl relative">
                         <button onClick={closeList} className="absolute top-4 right-4 text-gray-600 hover:text-gray-900">X</button>
                         <h3 className="text-black text-xl font-bold mb-4">Filtrar Propriedades</h3>
@@ -148,7 +195,7 @@ const PropertyList = () => {
                             </div>
                             <button
                                 type="submit"
-                                className="w-[8%] bg-blue-500 text-white p-2 rounded-full"
+                                className="bg-blue-500 text-white p-2 rounded-full"
                                 disabled={isLoading}
                             >
                                 {isLoading ? 'Buscando...' : 'Filtrar'}
@@ -163,33 +210,45 @@ const PropertyList = () => {
                                     {filteredProperties.map((property, index) => (
                                         <li
                                             key={index}
-                                            className={`p-4 rounded-lg shadow-sm border transition duration-200 ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'
+                                            className={`p-4 rounded-lg shadow-sm border transition duration-200 flex justify-between items-center ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'
                                                 }`}
                                         >
-                                            <p className="text-black">
-                                                <strong className="font-semibold">Endereço:</strong> {property.address?.street}, {property.address?.number}
-                                            </p>
-                                            <p className="text-black">
-                                                <strong className="font-semibold">Bairro:</strong> {property.address?.neighborhood}
-                                            </p>
-                                            <p className="text-black">
-                                                <strong className="font-semibold">Zona:</strong> {property.zone}
-                                            </p>
-                                            <div className="mt-2">
-                                                <span className="text-sm text-gray-600 mr-2">Categoria:</span>
-                                                <div
-                                                    className={`w-4 h-4 rounded-full inline-block align-middle ${property.category === 1
-                                                        ? 'bg-green-500'
-                                                        : property.category === 2
-                                                            ? 'bg-yellow-500'
-                                                            : 'bg-red-500'
-                                                        }`}
-                                                />
+                                            <div className="flex flex-col justify-between items-start w-[50%]">
+                                                <p className="text-black">
+                                                    <strong className="font-semibold">Endereço:</strong> {property.address?.street}, {property.address?.number}
+                                                </p>
+                                                <p className="text-black">
+                                                    <strong className="font-semibold">Bairro:</strong> {property.address?.neighborhood}
+                                                </p>
+                                                <p className="text-black">
+                                                    <strong className="font-semibold">Zona:</strong> {property.zone}
+                                                </p>
+                                                <div className="text-black">
+                                                    <strong className="font-semibold">Categoria: </strong>
+                                                    <div
+                                                        className={`w-4 h-4 rounded-full inline-block align-middle ${property.category === 1
+                                                            ? 'bg-green-500'
+                                                            : property.category === 2
+                                                                ? 'bg-yellow-500'
+                                                                : 'bg-red-500'
+                                                            }`}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="flex gap-2 items-end">
+                                                {/* <button onClick={() => handleUpdate(property)} className="text-sm text-blue-600 hover:underline">
+                                                    Editar
+                                                </button> */}
+                                                <button
+                                                    onClick={() => handleDelete(property.id)}
+                                                    className="text-sm text-red-600 hover:underline">
+                                                    Deletar
+                                                </button>
                                             </div>
                                         </li>
                                     ))}
                                 </ul>
-
                             </div>
                         )}
                     </div>
