@@ -3,10 +3,13 @@
 'use client'
 
 import React, { useState } from "react"
-import { useRouter } from "next/navigation"
-import Auth from "../auth/auth"  // Importando o componente de autenticação
+import { auth } from "../auth/auth"
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
+    const router = useRouter(
+
+    )
     const [data, setData] = useState<{
         email: string,
         password: string
@@ -21,6 +24,15 @@ export default function Home() {
             ...prev,
             [name]: value,
         }))
+    }
+
+    const handleLogin = async () => {
+        try {
+            await auth({ email: data.email, password: data.password })
+            router.push("/dashboard")
+          } catch (error) {
+            console.error('Erro ao entrar:', error)
+          }
     }
 
     return (
@@ -48,8 +60,13 @@ export default function Home() {
                     />
                 </div>
                 <div>
+                    <button
+                        onClick={handleLogin}
+                        className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                    >
+                        Entrar
+                    </button>
                     {/* Passando a função de autenticação como prop */}
-                    <Auth email={data.email} password={data.password} />
                 </div>
             </div>
         </div>
