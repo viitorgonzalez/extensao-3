@@ -1,13 +1,21 @@
 'use client'
 
+
+import { useRouter } from 'next/navigation'
 import { logout } from '../app/auth/logout'
 
 const Header = () => {
+  const router = useRouter()
 
   const handleLogout = async (e) => {
     e.preventDefault()
-    await logout() // faz o signOut no supabase
+    try {
+      await logout() // faz o signOut no supabase
+    } catch (error) {
+      console.error(error)
+    }
 
+    router.refresh()
   }
 
   return (

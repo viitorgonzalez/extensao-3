@@ -32,6 +32,8 @@ export default function Home() {
           } catch (error) {
             console.error('Erro ao entrar:', error)
           }
+          
+        router.refresh()
     }
 
     return (
