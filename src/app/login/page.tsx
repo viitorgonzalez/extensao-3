@@ -6,6 +6,7 @@ import { auth } from "../auth/auth"
 import { useRouter } from 'next/navigation'
 
 export default function Home() {
+    const [loading, setLoading] = useState(false);
     const router = useRouter()
 
     const [data, setData] = useState<{
@@ -27,11 +28,16 @@ export default function Home() {
     const handleLogin = async (e) => {
         e.preventDefault()
         try {
-            await auth({ email: data.email, password: data.password })
+            const success = await auth({ email: data.email, password: data.password });
+            if (success) {
+              router.refresh();
+            }
           } catch (error) {
-            console.error('Erro ao entrar:', error)
+            console.error('Erro ao entrar:', error);
+          } finally {
+            setLoading(false);
           }
-          
+
         router.refresh()
     }
 
@@ -64,7 +70,7 @@ export default function Home() {
                         onClick={handleLogin}
                         className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
                     >
-                        Entrar
+                        {loading ? 'Entrando...' : 'Entrar'}
                     </button>
                 </div>
             </div>

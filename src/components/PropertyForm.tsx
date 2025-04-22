@@ -88,7 +88,7 @@ const PropertyForm = () => {
                         <div onClick={() => handleCategorySelectForm(3)} className={`w-6 h-6 rounded-full bg-red-500 cursor-pointer ${selectedCategoryForm === 3 ? 'ring-2 ring-black brightness-90' : ''}`} />
                     </div>
 
-                    <button type="submit" className="w-[12%] bg-[#00BFFF] text-white p-2 rounded-full">Cadastrar</button>
+                    <button type="submit" className="bg-[#00BFFF] text-white p-2 rounded-full">Cadastrar</button>
                 </form>
             ) : (
                 <div className="text-green-600 text-lg font-semibold">Cadastro enviado! Obrigado.</div>

@@ -117,7 +117,7 @@ const PropertyList = () => {
     };
 
     return (
-        <div className="p-6">
+        <div className="">
             {propertyToEdit && (
                 <EditPropertyCard
                     property={propertyToEdit}
@@ -125,6 +125,7 @@ const PropertyList = () => {
                     onSave={handleUpdate}
                 />
             )}
+            <h3 className="text-black text-xl font-bold mb-4">Pesquisar</h3>
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 <input
@@ -158,7 +159,7 @@ const PropertyList = () => {
                     ))}
                 </select>
 
-                <div className="flex gap-2 p-4">
+                <div className="flex gap-2">
                     <h3 className="text-black">Categoria:</h3>
                     <div
                         onClick={() => handleCategorySelectList(1)}
@@ -186,18 +187,18 @@ const PropertyList = () => {
                 </button>
             </form>
 
-            {statusMessage && (
-                <div className={`mb-4 ${statusMessageStyle}`}>
-                    {statusMessage}
-                </div>
-            )}
 
             {/* Exibição dos resultados */}
             {filteredProperties.length > 0 && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
                     <div className="bg-blue-600 p-8 rounded-lg relative">
+                        {statusMessage && (
+                            <div className={`mb-4 ${statusMessageStyle}`}>
+                                {statusMessage}
+                            </div>
+                        )}
                         <button
-                            onClick={handleCloseResults}  // Fecha os resultados
+                            onClick={handleCloseResults}
                             className="absolute top-0 right-2 text-white font-bold text-xl">x</button>
                         <ul className="space-y-4">
                             <h4 className="font-bold mb-2 text-black">Resultados:</h4>
