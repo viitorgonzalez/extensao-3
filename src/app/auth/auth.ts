@@ -17,9 +17,8 @@ export const auth = async ({ email, password }: AuthProps): Promise<boolean> => 
             password
         })
 
-        if (error || !dataUser.user) {
+        if (!dataUser.user) {
             console.error('Erro de login: ', error)
-            alert('Email ou senha inválidos.')
             return false
         }
 

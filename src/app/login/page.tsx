@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 
 export default function Home() {
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);  
     const router = useRouter()
 
     const [data, setData] = useState<{
@@ -27,22 +28,26 @@ export default function Home() {
 
     const handleLogin = async (e) => {
         e.preventDefault()
+        setError(null);  
+        setLoading(true);
+
         try {
             const success = await auth({ email: data.email, password: data.password });
             if (success) {
-              router.refresh();
+                router.refresh();
+            } else {
+                setError('Usuário ou senha incorretos');
             }
-          } catch (error) {
+        } catch (error) {
             console.error('Erro ao entrar:', error);
-          } finally {
+            setError('Erro ao tentar fazer login. Tente novamente.');
+        } finally {
             setLoading(false);
-          }
-
-        router.refresh()
+        }
     }
 
     return (
-        <div className="h-screen flex justify-center items-center">
+        <div className="h-screen flex justify-center items-center bg-[#A57C59]">
             <div className="w-[400px] bg-white p-6 shadow-lg rounded-md">
                 <div className="mb-4">
                     <h1 className="mb-8 text-black font-bold text-center">Entrar</h1>
@@ -65,10 +70,15 @@ export default function Home() {
                         className="w-full mt-2 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                     />
                 </div>
+                {error && (
+                    <div className="mb-4 text-red-500 text-sm">
+                        {error}
+                    </div>
+                )}
                 <div>
                     <button
                         onClick={handleLogin}
-                        className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                        className="w-full bg-[#B0B87A] text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
                     >
                         {loading ? 'Entrando...' : 'Entrar'}
                     </button>

@@ -62,7 +62,7 @@ const PropertyList = () => {
 
             setFilteredProperties(filtered);
             setStatusMessage(`${filtered.length} propriedades encontradas`);
-            setStatusMessageStyle('text-gray-500');
+            setStatusMessageStyle('text-black font-bold');
         } catch (error) {
             console.error("Error fetching properties:", error);
             setStatusMessage('Erro ao buscar propriedades');
@@ -106,7 +106,13 @@ const PropertyList = () => {
             const result = await updateProperty(property);
 
             if (result.success) {
-                console.log("Editado!");
+                setStatusMessage('Propriedade atualizada com sucesso');
+                setPropertyToEdit(null);
+                setStatusMessageStyle('text-green-500 font-bold h-10 text-center text-lg p-1');
+                setTimeout(() => {
+                    setStatusMessage('');
+                    setStatusMessageStyle('');
+                }, 3000);
             }
 
         } catch (error) {
@@ -115,9 +121,14 @@ const PropertyList = () => {
             setIsLoading(false);
         }
     };
+    const handleEditClick = (property) => {
+        setPropertyToEdit(property);
+        handleCloseResults();
+    };
 
     return (
-        <div className="">
+        <div>
+
             {propertyToEdit && (
                 <EditPropertyCard
                     property={propertyToEdit}
@@ -180,7 +191,7 @@ const PropertyList = () => {
 
                 <button
                     type="submit"
-                    className="bg-[#59A5CE] text-white p-2 rounded-full"
+                    className="bg-[#B0B87A] text-white p-2 rounded-full"
                     disabled={isLoading}
                 >
                     {isLoading ? 'Buscando...' : 'Filtrar'}
@@ -191,7 +202,7 @@ const PropertyList = () => {
             {/* Exibição dos resultados */}
             {filteredProperties.length > 0 && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
-                    <div className="bg-blue-600 p-8 rounded-lg relative">
+                    <div className="bg-[#A57C59] p-8 rounded-lg relative w-1/3">
                         {statusMessage && (
                             <div className={`mb-4 ${statusMessageStyle}`}>
                                 {statusMessage}
@@ -200,7 +211,7 @@ const PropertyList = () => {
                         <button
                             onClick={handleCloseResults}
                             className="absolute top-0 right-2 text-white font-bold text-xl">x</button>
-                        <ul className="space-y-4">
+                        <ul className="space-y-4 max-h-[700px] overflow-y-auto pr-2 scroll-slim">
                             <h4 className="font-bold mb-2 text-black">Resultados:</h4>
                             {filteredProperties.map((property, index) => (
                                 <li
@@ -231,13 +242,12 @@ const PropertyList = () => {
                                     </div>
 
                                     <div className="flex gap-2 items-end">
-                                        <button onClick={() => setPropertyToEdit(property)} className="text-sm text-blue-600 hover:underline">
-                                            Editar
+                                        <button onClick={() => handleEditClick(property)}>
+                                            ✏️
                                         </button>
                                         <button
-                                            onClick={() => handleDelete(property.id)}
-                                            className="text-sm text-red-600 hover:underline">
-                                            Deletar
+                                            onClick={() => handleDelete(property.id)}>
+                                            🗑️
                                         </button>
                                     </div>
                                 </li>

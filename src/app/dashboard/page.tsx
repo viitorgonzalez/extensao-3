@@ -9,20 +9,17 @@ import Header from "../../components/Header";
 
 export default function Dashboard() {
     return (
-        <div className="p-4 flex flex-col justify-between bg-white h-screen overflow-auto">
+        <div className="flex flex-col justify-between bg-white h-screen overflow-auto p-4">
             <Header />
 
-            <div className="bg-[#FAF0E6] rounded-2xl p-6 shadow-lg w-full flex flex-col gap-4 mx-auto">
-                {/* Container principal com duas colunas */}
+            <div className="bg-[#A57C59] rounded-2xl mt-4 shadow-lg w-full flex flex-col gap-4 mx-auto p-8  ">
                 <div className="flex gap-4 w-full h-full">
-                    {/* Coluna esquerda com o gráfico */}
                     <div className="w-1/2 flex items-stretch">
                         <div className="w-full bg-white rounded-xl p-4 shadow flex items-center justify-center">
                             <GraphicSection />
                         </div>
                     </div>
 
-                    {/* Coluna direita com list e form empilhados */}
                     <div className="w-1/2 flex flex-col gap-4">
                         <div className="bg-white rounded-xl p-4 shadow h-1/2">
                             <PropertyList />
@@ -34,7 +31,7 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            <div className="p-4 mt-[2%] flex justify-center items-center">
+            <div className="mt-[2%] flex justify-center items-center">
                 <Footer />
             </div>
         </div>
